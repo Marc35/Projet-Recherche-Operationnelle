@@ -1,1 +1,1 @@
-# Projet-Recherche-Op-rationnelle
+# Projet-Recherche-Opérationnelle
