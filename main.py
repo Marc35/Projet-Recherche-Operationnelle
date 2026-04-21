@@ -5,10 +5,12 @@ from algorithmes.nord_ouest import nord_ouest_algo
 
 def main():
     run = True
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+
     while run:
 
 
-        dir = "ressources"
+        dir = os.path.join(base_dir, "ressources")  
         found = False
         while not found:
             try:
@@ -23,35 +25,40 @@ def main():
                 print("Erreur : veuillez entrer un numéro valide.")
 
 
-            print("\n\nVoici la matrice des couts initiaux du problème choisis :")
-            print_matrix(cost_matrix, supply, demand, "Matrice des couts")
-                
-            print("\n\nQuel algorithme voulez-vous exécuter pour avoir une proposition initiale ? \n1 - Algorithme Nord-Ouest\n2 - Algorithme Balas-Hammer")
-            while True:
-                try:    
-                    algo_initial_proposition = int(input("Algorithme n° : ").strip())
-                    if (algo_initial_proposition not in [1, 2]):
-                        print(f"Numéro invalide. Choisir entre 1 (Nord-Ouest) et 2 (Balas-Hammer)")
-                        continue
-                    break
-                except ValueError:
-                    print("Erreur : veuillez entrer un numéro valide.")
+        print("\n\nVoici la matrice des couts initiaux du problème choisis :")
+        print_matrix(cost_matrix, supply, demand, "Matrice des couts")
+            
+        print("\n\nQuel algorithme voulez-vous exécuter pour avoir une proposition initiale ? \n1 - Algorithme Nord-Ouest\n2 - Algorithme Balas-Hammer")
+        while True:
+            try:    
+                algo_initial_proposition = int(input("Algorithme n° : ").strip())
+                if (algo_initial_proposition not in [1, 2]):
+                    print(f"Numéro invalide. Choisir entre 1 (Nord-Ouest) et 2 (Balas-Hammer)")
+                    continue
+                break
+            except ValueError:
+                print("Erreur : veuillez entrer un numéro valide.")
 
-            if(algo_initial_proposition == 1):
-                initial_matrix = nord_ouest_algo(cost_matrix, supply, demand)
-                print("\n\nAvec l'algorithme Nord-Ouest, on obtient la proposition initiale suivante:\n")
-                print_matrix(initial_matrix, supply, demand, "Proposition initiale")
-
-
+        if(algo_initial_proposition == 1):
+            initial_matrix = nord_ouest_algo(cost_matrix, supply, demand)
+            print("\n\nAvec l'algorithme Nord-Ouest, on obtient la proposition initiale suivante:\n")
+            print_matrix(initial_matrix, supply, demand, "Proposition initiale")
 
 
 
 
-        print("\n\nVoulez-vous tester un  autre problème de transport ? (oui/non) : ", end="")
-        if input().lower() != "non":
-            run = True
-        else:
-            run = False
+
+        answere = False
+        while(not answere):
+            user_said = input("\n\nVoulez-vous tester un  autre problème de transport ? (oui/non) : ")
+            if user_said.lower() == "non":
+                run = False
+                answere = True
+            elif user_said.lower() == "oui":
+                answere = True
+            else:
+                print("Veuillez entrer une réponse valide !")
+        
     
 
 
