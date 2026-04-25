@@ -1,6 +1,10 @@
 from collections import deque
 
 def is_acyclic(transport_matrix):
+    """
+    A l'aide d'un parcours en largeur (BFS), on vérifie qu'il n'y a pas de cycle dans la proposition
+    S'il y a un cycle, le parcours s'arrête et le cycle est retourné
+    """
     rows = len(transport_matrix)
     cols = len(transport_matrix[0])
 
@@ -108,7 +112,8 @@ def maximize_cycle(transport_matrix, cycle, entering_edge=None, cost_matrix=None
     removed = [(i, j) for i, j, sign in edges if sign == "-" and matrix[i][j] == 0]
     print(f"\nArête(s) supprimée(s) : {['('+str(i+1)+', '+str(j+1)+')' for i, j in removed]}")
 
-    return matrix
+    degenerate = theta <= 1e-9
+    return matrix, degenerate
 
 
 def is_connected(transport_matrix):
@@ -167,7 +172,7 @@ def is_connected(transport_matrix):
 
 
 
-def make_connected(transport_matrix, cost_matrix, composantes):
+def make_connected(transport_matrix, cost_matrix, composantes, excluded_edges=[]):
     """
     Ajoute une seule arête epsilon reliant les deux composantes
     les moins chères à relier parmi toutes les paires possibles.
@@ -192,14 +197,16 @@ def make_connected(transport_matrix, cost_matrix, composantes):
             for i in offres_a:
                 for j in demandes_b:
                     cout = cost_matrix[i][j]
-                    if best is None or cout < best[0]:
-                        best = (cout, i, j, a + 1, b + 1)
+                    if (i, j) not in excluded_edges:
+                        if best is None or cout < best[0]:
+                            best = (cout, i, j, a + 1, b + 1)
 
             for i in offres_b:
                 for j in demandes_a:
                     cout = cost_matrix[i][j]
-                    if best is None or cout < best[0]:
-                        best = (cout, i, j, a + 1, b + 1)
+                    if (i, j) not in excluded_edges:
+                        if best is None or cout < best[0]:
+                            best = (cout, i, j, a + 1, b + 1)
 
     _, i, j, idx_a, idx_b = best
     matrix[i][j] = EPSILON
