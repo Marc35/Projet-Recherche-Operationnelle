@@ -1,7 +1,10 @@
 import os
 from fonctions.load import load_transport_problem
 from fonctions.print_matrix import print_matrix
+from fonctions.total_cost import total_cost
 from algorithmes.nord_ouest import nord_ouest_algo
+from algorithmes.balas_hammer import balas_hammer_algo
+from algorithmes.marche_pied_avec_potentiel import *
 
 def main():
     run = True
@@ -44,6 +47,96 @@ def main():
             print("\n\nAvec l'algorithme Nord-Ouest, on obtient la proposition initiale suivante:\n")
             print_matrix(initial_matrix, supply, demand, "Proposition initiale")
 
+        elif(algo_initial_proposition == 2):
+            initial_matrix = balas_hammer_algo(cost_matrix, supply, demand)
+            print("\n\nAvec l'algorithme Balais-Hammer, on obtient la proposition initiale suivante:\n")
+            print_matrix(initial_matrix, supply, demand, "Proposition initiale")
+
+        # On vérifie qu'il n'y a pas de cycle déja présent dans la proposition de transport initiale
+
+        print("\nMaintenant que nous avons la proposition de transport initiale, nous allons l'optimiser avec la méthode du marche-pied avec potentiels.")
+        print("Pour cela, il faut que la proposition soit non-dégénérée. Vérifions si elle possède un cycle initialement :")
+
+        one_step_matrix = initial_matrix
+        acyclic, cycle = is_acyclic(one_step_matrix)
+
+        while not acyclic:
+            # Si la proposition initiale possède un cycle, on le maximise
+            print("Il y a un cycle dans la proposition de transport initiale. Maximisons-le.")
+            one_step_matrix = maximize_cycle(one_step_matrix, cycle, None, cost_matrix)
+            print("Un cycle a été supprimé. Vérifions s'il n'en reste pas.")
+            acyclic, cycle = is_acyclic(one_step_matrix)
+        
+
+        # Maintenant la proposition initiale est acyclique, on peu directement passer à l'étape suivante
+        print("\n=> La proposition de transport initiale est acyclique. Vérifions qu'elle est connexe :")
+
+        best_proposition = False
+        while not best_proposition:
+
+            # On vérifie si la proposition de transport est connexe
+
+            connected, composants = is_connected(one_step_matrix)
+
+            # Si elle n'est pas connexe, il faut lui rajouter un certain nombre d'arrêtes
+            if not connected:
+                two_step_matrix = one_step_matrix
+
+                # Pour chaque étape, on vérifie à la fois que la proposition est connexe et acyclique. On sort de la boucle seulement si les deux conditions sont vérifiées. 
+                while not connected or not acyclic:
+                    two_step_matrix, entering_edge = make_connected(two_step_matrix, cost_matrix, composants)
+                    
+                    print("Maintenant une arrête à été ajouté entre deux sous graphes.\nVérifions que cette étape n'a pas créée de cycle :")
+
+                    acyclic, cycle = is_acyclic(two_step_matrix)
+
+                    if(acyclic == False):
+                        print("Il y a un cycle dans la proposition de transport. Maximisons-le.")
+                        three_step_matrix = maximize_cycle(two_step_matrix, cycle, entering_edge, None)
+                        print("Désormais la proposition de transport est acyclique. Vérifions qu'elle est connexe :")
+                        connected, composants = is_connected(three_step_matrix)
+                        if(connected == False):
+                            two_step_matrix = three_step_matrix
+                        else:
+                            break;
+
+                    # Après avoir rajouté une arrête, on a vérifié que cet ajout n'avait pas créé de cycle. Ici c'est qu'il n'en a pas créé
+                    else:
+                        print("\n=> La proposition de transport est acyclique (l'ajout d'une arrête n'a pas créé de cycle).\nVérifons qu'elle est connexe")
+                        connected, composants = is_connected(two_step_matrix)
+                        # Si la proposition est connexe et acyclique, on peu sortir du while (=> le graphe associé à la proposition est un arbre)
+                        if(connected == True):
+                            three_step_matrix = two_step_matrix
+                            break;
+
+            # On avait rendu la proposition acyclique. Si elle est déja connexe, on peu directement passer à l'étape des potentiels. 
+            else:
+                three_step_matrix = one_step_matrix
+                print("La proposition de transport est connexe et acyclique. Son graphe biparti associé est donc un arbre.")
+
+            # On calcul les coûts potentiels de chaque source et destinataire
+            E_sources, E_targets = compute_potentials(three_step_matrix, cost_matrix)
+
+            # On calcul puis affiche les tables des coûts potentiels et marginaux.
+            # Si coût marginal négatif il y a, alors le plus faible constitue l'arrête à ajouter 'best_edge' 
+            best_edge = compute_and_print_marginal_costs(cost_matrix, three_step_matrix, E_sources, E_targets, supply, demand)
+
+            if best_edge == None:
+                # Si aucune arrête améliorante existe, on a la proposition optimales ; on l'affiche
+                print("\nA l'aide de la méthode du marche-pied avec potentiels, nous avons donc :\n")
+                print_matrix(three_step_matrix, supply, demand, "Propostion optimale")
+                print("\nLe cout total de cette proposition de transport est : ", float(total_cost(cost_matrix, three_step_matrix)))
+                best_proposition = True
+            
+            else:
+                # On ajoute l'arrête améliorante à la proposition de transport
+                new_matrix = add_entering_edge(three_step_matrix, best_edge)
+                # Comme la proposition de transport formait un arbre, cet ajout a forcément créé un cycle. On l'identifie.
+                acyclic, cycle = is_acyclic(new_matrix)
+                # On maximise le cycle pour rendre la proposition de transport acyclique
+                one_step_matrix = maximize_cycle(new_matrix, cycle, best_edge, None)
+                # Maintenant, on reboucle ces quelques dernière ligne : rendre la proposition non-dégénérée, puis calcul des coûts potentiels et marginaux. 
+                
 
 
 
