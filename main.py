@@ -63,7 +63,7 @@ def main():
         while not acyclic:
             # Si la proposition initiale possède un cycle, on le maximise
             print("Il y a un cycle dans la proposition de transport initiale. Maximisons-le.")
-            one_step_matrix = maximize_cycle(one_step_matrix, cycle, None, cost_matrix)
+            one_step_matrix, _ = maximize_cycle(one_step_matrix, cycle, None, cost_matrix)
             print("Un cycle a été supprimé. Vérifions s'il n'en reste pas.")
             acyclic, cycle = is_acyclic(one_step_matrix)
         
@@ -81,33 +81,45 @@ def main():
             # Si elle n'est pas connexe, il faut lui rajouter un certain nombre d'arrêtes
             if not connected:
                 two_step_matrix = one_step_matrix
+                excluded_edges = []
 
                 # Pour chaque étape, on vérifie à la fois que la proposition est connexe et acyclique. On sort de la boucle seulement si les deux conditions sont vérifiées. 
                 while not connected or not acyclic:
+                    # On rend la proposition connexe
                     two_step_matrix, entering_edge = make_connected(two_step_matrix, cost_matrix, composants)
                     
                     print("Maintenant une arrête à été ajouté entre deux sous graphes.\nVérifions que cette étape n'a pas créée de cycle :")
-
+                    # On vérifie que la proposition est bien acyclique
                     acyclic, cycle = is_acyclic(two_step_matrix)
 
-                    if(acyclic == False):
+                    if not acyclic:
                         print("Il y a un cycle dans la proposition de transport. Maximisons-le.")
-                        three_step_matrix = maximize_cycle(two_step_matrix, cycle, entering_edge, None)
-                        print("Désormais la proposition de transport est acyclique. Vérifions qu'elle est connexe :")
-                        connected, composants = is_connected(three_step_matrix)
-                        if(connected == False):
-                            two_step_matrix = three_step_matrix
+                        # On enlève le cycle créé
+                        three_step_matrix, degenerate = maximize_cycle(two_step_matrix, cycle, entering_edge, None)
+
+                        # Si ce dernier cycle venait de l'arrête ajouté juste avant par make_connected, on backliste l'arrête et on l'enlêve de la proposition 
+                        if degenerate:
+                            excluded_edges.append(entering_edge)  # on blackliste
+                            two_step_matrix[entering_edge[0]][entering_edge[1]] = 0 
+                        # Sinon, c'est que l'arrête ajouté a permise de faire avancer l'algorithme : on la garde et passe la l'étape suivante
                         else:
-                            break;
+                            print("Désormais la proposition de transport est acyclique. Vérifions qu'elle est connexe :")
+                            excluded_edges = []
+                            connected, composants = is_connected(three_step_matrix)
+                            # Si la proposition n'est plus connexe on reboucle les algorithmes
+                            if not connected:
+                                two_step_matrix = three_step_matrix
+                            else:
+                                break
 
                     # Après avoir rajouté une arrête, on a vérifié que cet ajout n'avait pas créé de cycle. Ici c'est qu'il n'en a pas créé
                     else:
                         print("\n=> La proposition de transport est acyclique (l'ajout d'une arrête n'a pas créé de cycle).\nVérifons qu'elle est connexe")
                         connected, composants = is_connected(two_step_matrix)
                         # Si la proposition est connexe et acyclique, on peu sortir du while (=> le graphe associé à la proposition est un arbre)
-                        if(connected == True):
+                        if connected:
                             three_step_matrix = two_step_matrix
-                            break;
+                            break
 
             # On avait rendu la proposition acyclique. Si elle est déja connexe, on peu directement passer à l'étape des potentiels. 
             else:
@@ -134,7 +146,7 @@ def main():
                 # Comme la proposition de transport formait un arbre, cet ajout a forcément créé un cycle. On l'identifie.
                 acyclic, cycle = is_acyclic(new_matrix)
                 # On maximise le cycle pour rendre la proposition de transport acyclique
-                one_step_matrix = maximize_cycle(new_matrix, cycle, best_edge, None)
+                one_step_matrix, _ = maximize_cycle(new_matrix, cycle, best_edge, None)
                 # Maintenant, on reboucle ces quelques dernière ligne : rendre la proposition non-dégénérée, puis calcul des coûts potentiels et marginaux. 
                 
 
