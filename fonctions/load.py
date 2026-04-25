@@ -1,4 +1,8 @@
 def load_transport_problem(filename):
+    """
+    Permet de lire les propositions du dossier "ressources" avec le formatage demandé
+    Création de 3 matrices : provisions, couts et demandes
+    """
 
     with open(filename, "r", encoding="utf-8") as f: 
         lines = f.read().splitlines()
@@ -16,5 +20,3 @@ def load_transport_problem(filename):
     demand = list(map(int, lines[m + 1].split()))
 
     return cost_matrix, supply, demand
-
-
