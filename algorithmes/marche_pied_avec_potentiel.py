@@ -1,6 +1,10 @@
 from collections import deque
 
 def is_acyclic(basis_matrix):
+    """
+    A l'aide d'un parcours en largeur (BFS), on vérifie qu'il n'y a pas de cycle dans la proposition
+    S'il y a un cycle, le parcours s'arrête et le cycle est retourné
+    """
     rows = len(basis_matrix)
     cols = len(basis_matrix[0])
 
@@ -8,8 +12,8 @@ def is_acyclic(basis_matrix):
     for i in range(rows):
         for j in range(cols):
             if basis_matrix[i][j] == 1:
-                u = (0, i)
-                v = (1, j)
+                u = (0, i) # noeud offre
+                v = (1, j) # noeud demande
                 graph.setdefault(u, []).append(v)
                 graph.setdefault(v, []).append(u)
 
@@ -25,6 +29,7 @@ def is_acyclic(basis_matrix):
     while queue:
         node = queue.popleft()
         for neighbor in graph.get(node, []):
+            # Voisin non visité : on le marque et on retient son parent
             if neighbor not in visited:
                 visited[neighbor] = node
                 queue.append(neighbor)
@@ -62,7 +67,7 @@ def is_acyclic(basis_matrix):
 
                 cycle = branch_node + list(reversed(branch_neighbor))
 
-                readable = ["S"+str(n[1]+1) if n[0]==0 else "D"+str(n[1]+1) for n in cycle]
+                readable = ["P"+str(n[1]+1) if n[0]==0 else "C"+str(n[1]+1) for n in cycle]
                 print(f"Cycle détecté : {' -> '.join(readable)}")
                 return False, cycle
 
@@ -190,8 +195,8 @@ def is_connected(basis_matrix):
     # Sinon c'est qu'il y a plusieurs sous graphes (inaccessibles entre eux)
         print(f"\nLa proposition est non connexe ({len(composantes)} sous-graphes)\n")
         for k, comp in enumerate(composantes):
-            offres   = ["S"+str(n[1]+1) for n in comp if n[0] == 0]
-            demandes = ["D"+str(n[1]+1) for n in comp if n[0] == 1]
+            offres   = ["P"+str(n[1]+1) for n in comp if n[0] == 0]
+            demandes = ["C"+str(n[1]+1) for n in comp if n[0] == 1]
             print(f"  Sous-graphe {k+1} : Offres {offres} | Demandes {demandes}")
         return False, composantes
     
@@ -243,7 +248,7 @@ def make_connected(basis_matrix, cost_matrix, composantes, excluded_edges):
 def compute_potentials(basis_matrix, cost_matrix):
     """
     Calcule les potentiels de chaque sommet.
-    On fixe arbitrairement E(S1) = 0 (le premier noeud offre).
+    On fixe arbitrairement E(P1) = 0 
     Pour chaque arête (i,j) utilisée : E(i) - E(j) = c(i,j)
     """
     rows = len(basis_matrix)
@@ -274,9 +279,9 @@ def compute_potentials(basis_matrix, cost_matrix):
                         changed = True
 
     # Affichage des potentiels précédemment calculés
-    print("\nPotentiels calculés (avec E(S1) = 0) :")
+    print("\nPotentiels calculés (avec E(P1) = 0) :")
     for i in range(rows):
-        print(f"  E(S{i+1}) = {E_sources[i]}")
+        print(f"  E(P{i+1}) = {E_sources[i]}")
     for j in range(cols):
         print(f"  E(C{j+1}) = {E_targets[j]}")
 
@@ -304,11 +309,11 @@ def compute_and_print_marginal_costs(cost_matrix, basis_matrix, E_sources, E_tar
     table_w = col_w * cols + cols + 1
     print()
     print(" " * col_w + f"{'Coûts potentiels':^{table_w}}")
-    print(" " * (col_w + 1) + "".join(f"{'D'+str(j+1):^{col_w}} " for j in range(cols)))
+    print(" " * (col_w + 1) + "".join(f"{'C'+str(j+1):^{col_w}} " for j in range(cols)))
     sep = " " * col_w + "+" + (("-" * col_w + "+") * cols)
     print(sep)
     for i in range(rows):
-        row = f"S{i+1} |" + "".join(f"{potential_costs[i][j]:^{col_w}}|" for j in range(cols))
+        row = f"P{i+1} |" + "".join(f"{potential_costs[i][j]:^{col_w}}|" for j in range(cols))
         print(" " * (col_w - 3) + f"{row}  {supply[i]}")
     print(sep)
     print(" " * col_w + "".join(f" {demand[j]:^{col_w}}" for j in range(cols)))
@@ -317,10 +322,10 @@ def compute_and_print_marginal_costs(cost_matrix, basis_matrix, E_sources, E_tar
 
     # Affichage des coûts marginaux
     print(" " * col_w + f"{'Coûts marginaux':^{table_w}}")
-    print(" " * (col_w + 1) + "".join(f"{'D'+str(j+1):^{col_w}} " for j in range(cols)))
+    print(" " * (col_w + 1) + "".join(f"{'C'+str(j+1):^{col_w}} " for j in range(cols)))
     print(sep)
     for i in range(rows):
-        row = f"S{i+1} |" + "".join(f"{marginal_costs[i][j]:^{col_w}}|" for j in range(cols))
+        row = f"P{i+1} |" + "".join(f"{marginal_costs[i][j]:^{col_w}}|" for j in range(cols))
         print(" " * (col_w - 3) + f"{row}  {supply[i]}")
     print(sep)
     print(" " * col_w + "".join(f" {demand[j]:^{col_w}}" for j in range(cols)))
@@ -336,7 +341,7 @@ def compute_and_print_marginal_costs(cost_matrix, basis_matrix, E_sources, E_tar
                 best = (i, j)
 
     if best is not None:
-        print(f"\nMeilleure arête améliorante : (S{best[0]+1}, D{best[1]+1}) [coût marginal = {best_cost}]")
+        print(f"\nMeilleure arête améliorante : (P{best[0]+1}, C{best[1]+1}) [coût marginal = {best_cost}]")
     else:
         print("\n=> Tous les coûts marginaux sont positifs : la proposition est optimale")
 
