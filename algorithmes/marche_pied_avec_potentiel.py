@@ -1,50 +1,68 @@
 from collections import deque
 
-def is_acyclic(transport_matrix):
-    """
-    A l'aide d'un parcours en largeur (BFS), on vérifie qu'il n'y a pas de cycle dans la proposition
-    S'il y a un cycle, le parcours s'arrête et le cycle est retourné
-    """
-    rows = len(transport_matrix)
-    cols = len(transport_matrix[0])
+def is_acyclic(basis_matrix):
+    rows = len(basis_matrix)
+    cols = len(basis_matrix[0])
 
-    # Construction du graphe
     graph = {}
     for i in range(rows):
         for j in range(cols):
-            if transport_matrix[i][j] > 0:
-                u = (0, i)  # noeud offre
-                v = (1, j)  # noeud demande
+            if basis_matrix[i][j] == 1:
+                u = (0, i)
+                v = (1, j)
                 graph.setdefault(u, []).append(v)
                 graph.setdefault(v, []).append(u)
 
-    visited = {}  # noeud => parent
+    if not graph:
+        return True, []
 
-    # BFS
+    visited = {}  # noeud => parent
     queue = deque()
     start = list(graph.keys())[0]
     queue.append(start)
-    visited[start] = None  # le noeud de départ n'a pas de parent
+    visited[start] = None
 
     while queue:
         node = queue.popleft()
-
         for neighbor in graph.get(node, []):
             if neighbor not in visited:
-                # Voisin non visité : on le marque et on retient son parent
                 visited[neighbor] = node
                 queue.append(neighbor)
             elif visited[node] != neighbor:
-                # Voisin déjà visité et ce n'est pas le parent : il y a donc un cycle
-                # On remonte le chemin pour reconstruire le cycle
-                cycle = [node, neighbor]
-                current = node
-                while visited[current] is not None and visited[current] != neighbor:
-                    current = visited[current]
-                    cycle.append(current)
-                cycle.reverse()
+                # Remonter depuis les deux côtés pour trouver l'ancêtre commun et reconstruire le cycle complet
+                
+                # Chemin depuis node jusqu'à la racine
+                path_node = []
+                cur = node
+                while cur is not None:
+                    path_node.append(cur)
+                    cur = visited[cur]
 
-                readable = ["O"+str(n[1]+1) if n[0]==0 else "D"+str(n[1]+1) for n in cycle]
+                # Chemin depuis neighbor jusqu'à la racine
+                path_neighbor = []
+                cur = neighbor
+                while cur is not None:
+                    path_neighbor.append(cur)
+                    cur = visited[cur]
+
+                # Ancêtre commun = premier élément commun aux deux chemins
+                set_node = {n: i for i, n in enumerate(path_node)}
+                ancestor = None
+                ancestor_idx_n = 0
+                for idx_nn, n in enumerate(path_neighbor):
+                    if n in set_node:
+                        ancestor = n
+                        ancestor_idx_n = idx_nn
+                        break
+
+                # Reconstruction : node → ... → ancêtre ← ... ← neighbor
+                ancestor_idx_node = set_node[ancestor]
+                branch_node     = path_node[:ancestor_idx_node + 1]      # node → ancêtre
+                branch_neighbor = path_neighbor[:ancestor_idx_n]          # neighbor → juste avant ancêtre
+
+                cycle = branch_node + list(reversed(branch_neighbor))
+
+                readable = ["S"+str(n[1]+1) if n[0]==0 else "D"+str(n[1]+1) for n in cycle]
                 print(f"Cycle détecté : {' -> '.join(readable)}")
                 return False, cycle
 
@@ -52,13 +70,14 @@ def is_acyclic(transport_matrix):
 
 
 
-def maximize_cycle(transport_matrix, cycle, entering_edge=None, cost_matrix=None):
+def maximize_cycle(transport_matrix, basis_matrix, cycle, entering_edge=None, cost_matrix=None):
     """
     Maximise le transport sur un cycle détecté.
     - entering_edge : arête ajoutée lors du marche-pied (toujours en "+")
     - cost_matrix   : utilisée pour choisir le bon sens sur un cycle initial (Proposition 1.1)
     """
     matrix = [row[:] for row in transport_matrix]
+    basis = [row[:] for row in basis_matrix]
 
     # Reconstruction des arêtes du cycle avec leur signe
     edges = []
@@ -67,7 +86,10 @@ def maximize_cycle(transport_matrix, cycle, entering_edge=None, cost_matrix=None
         v = cycle[k + 1]
         i = u[1] if u[0] == 0 else v[1]
         j = v[1] if v[0] == 1 else u[1]
-        sign = "+" if k % 2 == 0 else "-"
+        # Le premier nœud est-il une source (type 0) ?
+        first_is_source = (cycle[0][0] == 0)
+        is_plus = (k % 2 == 0) if first_is_source else (k % 2 == 1)
+        sign = "+" if is_plus else "-"
         edges.append((i, j, sign))
 
     if entering_edge is not None:
@@ -105,29 +127,33 @@ def maximize_cycle(transport_matrix, cycle, entering_edge=None, cost_matrix=None
     for i, j, sign in edges:
         if sign == "+":
             matrix[i][j] += theta
+            basis[i][j] = 1
         else:
             matrix[i][j] -= theta
 
     # Arêtes supprimées
-    removed = [(i, j) for i, j, sign in edges if sign == "-" and matrix[i][j] == 0]
+    removed = []
+    for i, j in minus_edges:
+        if matrix[i][j] == 0:
+            basis[i][j] = 0                      
+            removed.append((i, j))
     print(f"\nArête(s) supprimée(s) : {['('+str(i+1)+', '+str(j+1)+')' for i, j in removed]}")
+    degenerate = theta == 0
+    return matrix, basis, degenerate   
 
-    degenerate = theta <= 1e-9
-    return matrix, degenerate
 
-
-def is_connected(transport_matrix):
+def is_connected(basis_matrix):
     """
     A l'aide d'un parcours en largeur (BFS), test si la proposition est connexe
     """
-    rows = len(transport_matrix)
-    cols = len(transport_matrix[0])
+    rows = len(basis_matrix)
+    cols = len(basis_matrix[0])
 
     # Construction du graphe
     graph = {}
     for i in range(rows):
         for j in range(cols):
-            if transport_matrix[i][j] > 0:
+            if basis_matrix[i][j] == 1:
                 u, v = (0, i), (1, j)
                 graph.setdefault(u, []).append(v)
                 graph.setdefault(v, []).append(u)
@@ -164,7 +190,7 @@ def is_connected(transport_matrix):
     # Sinon c'est qu'il y a plusieurs sous graphes (inaccessibles entre eux)
         print(f"\nLa proposition est non connexe ({len(composantes)} sous-graphes)\n")
         for k, comp in enumerate(composantes):
-            offres   = ["O"+str(n[1]+1) for n in comp if n[0] == 0]
+            offres   = ["S"+str(n[1]+1) for n in comp if n[0] == 0]
             demandes = ["D"+str(n[1]+1) for n in comp if n[0] == 1]
             print(f"  Sous-graphe {k+1} : Offres {offres} | Demandes {demandes}")
         return False, composantes
@@ -172,16 +198,13 @@ def is_connected(transport_matrix):
 
 
 
-def make_connected(transport_matrix, cost_matrix, composantes, excluded_edges=[]):
+def make_connected(basis_matrix, cost_matrix, composantes, excluded_edges):
     """
-    Ajoute une seule arête epsilon reliant les deux composantes
-    les moins chères à relier parmi toutes les paires possibles.
-    Retourne (matrix, (i, j)) : la matrice modifiée et l'arête ajoutée.
+    Ajoute une seule arête reliant les deux composantes les moins chères à relier parmi toutes les paires possibles.
     """
-    matrix = [row[:] for row in transport_matrix]
-    EPSILON = 1e-9
+    basis = [row[:] for row in basis_matrix]
 
-    best = None  # (coût, i, j, idx_a, idx_b)
+    best = None  
 
     # On cherche le meilleur lien global entre toutes les paires de composantes
     for a in range(len(composantes)):
@@ -209,22 +232,22 @@ def make_connected(transport_matrix, cost_matrix, composantes, excluded_edges=[]
                             best = (cout, i, j, a + 1, b + 1)
 
     _, i, j, idx_a, idx_b = best
-    matrix[i][j] = EPSILON
-    print(f"\n=> Epsilon ajouté en case ({i+1}, {j+1}) [coût = {cost_matrix[i][j]}] pour relier les sous-graphes {idx_a} et {idx_b}")
+    basis[i][j] = 1
+    print(f"\n=> Arrête de base ajouté en case ({i+1}, {j+1}) [coût = {cost_matrix[i][j]}] pour relier les sous-graphes {idx_a} et {idx_b}")
 
-    return matrix, (i, j)
-
-
+    return basis, (i, j)
 
 
-def compute_potentials(transport_matrix, cost_matrix):
+
+
+def compute_potentials(basis_matrix, cost_matrix):
     """
     Calcule les potentiels de chaque sommet.
     On fixe arbitrairement E(S1) = 0 (le premier noeud offre).
     Pour chaque arête (i,j) utilisée : E(i) - E(j) = c(i,j)
     """
-    rows = len(transport_matrix)
-    cols = len(transport_matrix[0])
+    rows = len(basis_matrix)
+    cols = len(basis_matrix[0])
 
     # Initialisation : None => potentiel pas encore calculé
     E_sources = [None] * rows   # E(Si)
@@ -241,7 +264,7 @@ def compute_potentials(transport_matrix, cost_matrix):
         for i in range(rows):
             for j in range(cols):
                 # On calcul les potentiels à partir du graphe associé à la proposition de transport 
-                if transport_matrix[i][j] > 0:
+                if basis_matrix[i][j] == 1:
                     # On utilse la formule E(i) - E(j) = c(i,j)
                     if E_sources[i] is not None and E_targets[j] is None:
                         E_targets[j] = E_sources[i] - cost_matrix[i][j]
@@ -262,7 +285,7 @@ def compute_potentials(transport_matrix, cost_matrix):
 
 
 
-def compute_and_print_marginal_costs(cost_matrix, transport_matrix, E_sources, E_targets, supply, demand):
+def compute_and_print_marginal_costs(cost_matrix, basis_matrix, E_sources, E_targets, supply, demand):
     """
     Calcule et affiche les coûts potentiels et marginaux.
     Retourne la meilleure arête améliorante (coût marginal le plus négatif) ou None.
@@ -270,7 +293,6 @@ def compute_and_print_marginal_costs(cost_matrix, transport_matrix, E_sources, E
     rows = len(cost_matrix)
     cols = len(cost_matrix[0])
     col_w = 9
-    EPSILON = 1e-9
 
     # Calcul de la table des coûts potentiels : E(i) - E(j)
     potential_costs = [[E_sources[i] - E_targets[j] for j in range(cols)] for i in range(rows)]
@@ -309,7 +331,7 @@ def compute_and_print_marginal_costs(cost_matrix, transport_matrix, E_sources, E
     best_cost = 0  # on cherche strictement négatif
     for i in range(rows):
         for j in range(cols):
-            if transport_matrix[i][j] <= EPSILON and marginal_costs[i][j] < best_cost:
+            if basis_matrix[i][j] == 0 and marginal_costs[i][j] < best_cost:
                 best_cost = marginal_costs[i][j]
                 best = (i, j)
 
@@ -322,18 +344,15 @@ def compute_and_print_marginal_costs(cost_matrix, transport_matrix, E_sources, E
 
 
 
-def add_entering_edge(transport_matrix, entering_edge):
+def add_entering_edge(basis_matrix, entering_edge):
     """
     Ajoute l'arête améliorante à la proposition de transport
-    Cet ajout se fait à l'aide du quantité très faible epsilon (temporaire)
-    Grâce à celui-ci, l'arrête ajouté fera forcément un cycle, qui sera donc détecté par is_acyclic
     """
-    EPSILON = 1e-9
-    matrix = [row[:] for row in transport_matrix]
+    basis = [row[:] for row in basis_matrix]
     i, j = entering_edge
-    if matrix[i][j] != 0:
+    if basis[i][j] == 1:
         print(f"Attention : l'arête ({i+1}, {j+1}) est déjà utilisée.")
     else:
-        matrix[i][j] = EPSILON
+        basis[i][j] = 1
         print(f"Arête ajoutée : (S{i+1}, D{j+1})")
-    return matrix
+    return basis
