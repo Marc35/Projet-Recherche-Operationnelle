@@ -7,17 +7,19 @@ def print_matrix(matrix, supply, demand, title):
     print(" " *col_w + f"{title:^{table_w}}")
 
     # En-tête
-    print(" "*(col_w+1) + "".join(f"{'D'+str(j+1):^{col_w}} " for j in range(n)))
+    print(" "*(col_w+2) + "".join(f"{'D'+str(j+1):^{col_w}} " for j in range(n)))
 
     # Matrice
-    sep = " "*col_w + "+" + (("-" * col_w + "+") * n)
+    sep = " "*(col_w+1) + "+" + (("-" * col_w + "+") * n)
     print(sep)
 
     for i in range(m):
-        row = f"S{i+1} |" + "".join(f"{matrix[i][j]:^{col_w}}|" for j in range(n))
+        if i+1 >= 10:
+            espace = ""
+        else:
+            espace = " "
+        row = f"S{i+1}" + espace + " |" + "".join(f"{matrix[i][j]:^{col_w}}|" for j in range(n))
         print(" " * (col_w-3) + f"{row}  {supply[i]}")
 
     print(sep)
-    print(" "*col_w + "".join(f" {demand[j]:^{col_w}}" for j in range(n)))
-
-
+    print(" "*(col_w+1) + "".join(f" {demand[j]:^{col_w}}" for j in range(n)))
