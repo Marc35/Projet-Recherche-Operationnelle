@@ -5,6 +5,7 @@ from fonctions.total_cost import total_cost
 from algorithmes.nord_ouest import nord_ouest_algo
 from algorithmes.balas_hammer import balas_hammer_algo
 from algorithmes.marche_pied_avec_potentiel import *
+from fonctions.complexity import *
 
 def main():
     run = True
@@ -54,7 +55,7 @@ def main():
 
         # On utilisera une matrice "brouillon" pour guider nos ajouts/supression d'arrêtes
         basis_matrix = [[1 if initial_matrix[i][j] > 0 else 0 for j in range(len(initial_matrix[0]))] for i in range(len(initial_matrix))]
-        
+
         # On vérifie qu'il n'y a pas de cycle déja présent dans la proposition de transport initiale
 
         print("\nMaintenant que nous avons la proposition de transport initiale, nous allons l'optimiser avec la méthode du marche-pied avec potentiels.")
@@ -166,7 +167,26 @@ def main():
                 answere = True
             else:
                 print("Veuillez entrer une réponse valide !")
+
+    print("\n\nVoulez-vous lancer l'étude de complexité ? (oui/non) : ")
+    if input().lower() == "oui":
+        n_values = [10, 40, 100, 400, 1000, 4000, 10000]
         
+        print("Combien de répétitions ? (100 recommandé, mais long pour les grands n) : ")
+        try:
+            nb_rep = int(input().strip())
+        except ValueError:
+            nb_rep = 100
+        
+        print(f"\nLancement des mesures ({nb_rep} répétitions par valeur de n)...")
+        print("Attention : ne pas utiliser la machine pendant l'exécution !\n")
+        
+        resultats = mesure_temps(n_values, nb_repetitions=nb_rep)
+        
+        print("\nTracé des graphiques...")
+        tracer_graphiques(resultats, n_values)
+        tracer_comparaison(resultats, n_values)
+            
     
 
 
