@@ -38,6 +38,7 @@ def balas_hammer_algo(cost_matrix, supply, demand):
         max_rows = [i for i, p in row_penalties.items() if p == max_row_penalty]
         max_cols = [j for j, p in col_penalties.items() if p == max_col_penalty]
 
+        print()
         print(f"Pénalités lignes  : { {f'S{i+1}': row_penalties[i] for i in active_rows} }")
         print(f"Pénalités colonnes: { {f'D{j+1}': col_penalties[j] for j in active_cols} }")
         if max_row_penalty >= max_col_penalty:
