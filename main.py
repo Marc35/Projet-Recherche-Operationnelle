@@ -169,8 +169,9 @@ def main():
                 print("Veuillez entrer une réponse valide !")
 
     print("\n\nVoulez-vous lancer l'étude de complexité ? (oui/non) : ")
-    if input().lower() == "oui":
-        n_values = [10, 40, 100, 400, 1000, 4000, 10000]
+    if input("Réponse : ").lower() == "oui":
+        # n_values = [10, 40, 100, 400, 1000, 4000, 10000] => Problème de temps, ainsi nous avons adapté les valeurs pour avoir une étude optimale et réalisable
+        n_values = [2, 3, 5, 10, 20, 40, 100]
         
         print("Combien de répétitions ? (100 recommandé, mais long pour les grands n) : ")
         try:
