@@ -85,13 +85,14 @@ def maximize_cycle(transport_matrix, basis_matrix, cycle, entering_edge=None, co
     basis = [row[:] for row in basis_matrix]
 
     # Reconstruction des arêtes du cycle avec leur signe
+    cycle_edges = list(range(len(cycle) - 1)) 
+
     edges = []
-    for k in range(len(cycle) - 1):
+    for k in range(len(cycle)):  # ← len(cycle) au lieu de len(cycle) - 1
         u = cycle[k]
-        v = cycle[k + 1]
+        v = cycle[(k + 1) % len(cycle)]  # ← modulo pour boucler sur cycle[0]
         i = u[1] if u[0] == 0 else v[1]
         j = v[1] if v[0] == 1 else u[1]
-        # Le premier nœud est-il une source (type 0) ?
         first_is_source = (cycle[0][0] == 0)
         is_plus = (k % 2 == 0) if first_is_source else (k % 2 == 1)
         sign = "+" if is_plus else "-"
