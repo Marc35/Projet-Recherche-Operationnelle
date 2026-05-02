@@ -309,26 +309,34 @@ def compute_and_print_marginal_costs(cost_matrix, basis_matrix, E_sources, E_tar
     table_w = col_w * cols + cols + 1
     print()
     print(" " * col_w + f"{'Coûts potentiels':^{table_w}}")
-    print(" " * (col_w + 1) + "".join(f"{'C'+str(j+1):^{col_w}} " for j in range(cols)))
-    sep = " " * col_w + "+" + (("-" * col_w + "+") * cols)
+    print(" " * (col_w + 2) + "".join(f"{'C'+str(j+1):^{col_w}} " for j in range(cols)))
+    sep = " " * (col_w+1) + "+" + (("-" * col_w + "+") * cols)
     print(sep)
     for i in range(rows):
-        row = f"P{i+1} |" + "".join(f"{potential_costs[i][j]:^{col_w}}|" for j in range(cols))
+        if i+1 >= 10:
+            espace = ""
+        else:
+            espace = " "
+        row = f"P{i+1}" + espace + " |" + "".join(f"{potential_costs[i][j]:^{col_w}}|" for j in range(cols))
         print(" " * (col_w - 3) + f"{row}  {supply[i]}")
     print(sep)
-    print(" " * col_w + "".join(f" {demand[j]:^{col_w}}" for j in range(cols)))
+    print(" " * (col_w+1) + "".join(f" {demand[j]:^{col_w}}" for j in range(cols)))
 
     print()
 
     # Affichage des coûts marginaux
     print(" " * col_w + f"{'Coûts marginaux':^{table_w}}")
-    print(" " * (col_w + 1) + "".join(f"{'C'+str(j+1):^{col_w}} " for j in range(cols)))
+    print(" " * (col_w + 2) + "".join(f"{'C'+str(j+1):^{col_w}} " for j in range(cols)))
     print(sep)
     for i in range(rows):
-        row = f"P{i+1} |" + "".join(f"{marginal_costs[i][j]:^{col_w}}|" for j in range(cols))
+        if i+1 >= 10:
+            espace = ""
+        else:
+            espace = " "
+        row = f"P{i+1}" + espace + " |" + "".join(f"{marginal_costs[i][j]:^{col_w}}|" for j in range(cols))
         print(" " * (col_w - 3) + f"{row}  {supply[i]}")
     print(sep)
-    print(" " * col_w + "".join(f" {demand[j]:^{col_w}}" for j in range(cols)))
+    print(" " * (col_w+1) + "".join(f" {demand[j]:^{col_w}}" for j in range(cols)))
 
     # Détection de la meilleure arête améliorante (coût marginal le plus négatif)
     # On ignore les arêtes déjà utilisées dans la proposition (coût marginal = 0 par définition)
