@@ -1,0 +1,100 @@
+Voici la matrice des couts initiaux du problème 4 :
+           Matrice des couts  
+              D1        D2     
+          +---------+---------+
+      S1  |   30    |    1    |  600
+      S2  |    1    |   30    |  500
+          +---------+---------+
+              100      1000   
+
+Avec l'algorithme Nord-Ouest, on obtient la proposition initiale suivante:
+
+         Proposition initiale 
+              D1        D2     
+          +---------+---------+
+      S1  |   100   |   500   |  600
+      S2  |    0    |   500   |  500
+          +---------+---------+
+              100      1000   
+
+Maintenant que nous avons la proposition de transport initiale, nous allons l'optimiser avec la méthode du marche-pied avec potentiels.
+Pour cela, il faut que la proposition soit non-dégénérée. Vérifions si elle possède un cycle initialement :
+
+=> La proposition de transport initiale est acyclique. Vérifions qu'elle est connexe :
+
+=> a proposition est connexe
+La proposition de transport est connexe et acyclique. Son graphe biparti associé est donc un arbre.
+
+Potentiels calculés (avec E(P1) = 0) :
+  E(P1) = 0
+  E(P2) = 29
+  E(C1) = -30
+  E(C2) = -1
+
+           Coûts potentiels   
+             C1        C2     
+         +---------+---------+
+      P1 |   30    |    1    |  600
+      P2 |   59    |   30    |  500
+         +---------+---------+
+             100      1000   
+
+            Coûts marginaux   
+             C1        C2     
+         +---------+---------+
+      P1 |    0    |    0    |  600
+      P2 |   -58   |    0    |  500
+         +---------+---------+
+             100      1000   
+
+Meilleure arête améliorante : (P2, C1) [coût marginal = -58]
+Arête ajoutée : (S2, D1)
+Cycle détecté : C2 -> P1 -> C1 -> P2
+
+Conditions pour chaque case du cycle :
+  Case (1, 2) [+] : valeur actuelle = 500
+  Case (1, 1) [-] : valeur actuelle = 100
+  Case (2, 1) [+] : valeur actuelle = 0
+
+Theta (valeur maximale transférable) = 100
+
+Arête(s) supprimée(s) : ['(1, 1)']
+
+=> a proposition est connexe
+La proposition de transport est connexe et acyclique. Son graphe biparti associé est donc un arbre.
+
+Potentiels calculés (avec E(P1) = 0) :
+  E(P1) = 0
+  E(P2) = 29
+  E(C1) = 28
+  E(C2) = -1
+
+           Coûts potentiels   
+             C1        C2     
+         +---------+---------+
+      P1 |   -28   |    1    |  600
+      P2 |    1    |   30    |  500
+         +---------+---------+
+             100      1000   
+
+            Coûts marginaux   
+             C1        C2     
+         +---------+---------+
+      P1 |   58    |    0    |  600
+      P2 |    0    |    0    |  500
+         +---------+---------+
+             100      1000   
+
+=> Tous les coûts marginaux sont positifs : la proposition est optimale
+
+A l'aide de la méthode du marche-pied avec potentiels, nous avons donc :
+
+         Proposition optimale 
+              D1        D2     
+          +---------+---------+
+      S1  |    0    |   600   |  600
+      S2  |   100   |   500   |  500
+          +---------+---------+
+              100      1000   
+
+Le cout total de cette proposition de transport est :  15700.0

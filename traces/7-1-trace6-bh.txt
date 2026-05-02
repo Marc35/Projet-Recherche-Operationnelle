@@ -1,0 +1,149 @@
+Voici la matrice des couts initiaux du problème 6 :
+                     Matrice des couts            
+              D1        D2        D3        D4     
+          +---------+---------+---------+---------+
+      S1  |   11    |   12    |   10    |   10    |  60
+      S2  |   17    |   16    |   15    |   18    |  30
+      S3  |   19    |   21    |   20    |   22    |  90
+          +---------+---------+---------+---------+
+              50        75        30        25    
+
+Pénalités lignes  : {'S1': 0, 'S2': 1, 'S3': 1}
+Pénalités colonnes: {'D1': 6, 'D2': 4, 'D3': 5, 'D4': 8}
+Pénalité max : colonnes ['D4'] avec 8
+Arête choisie : P1 -> C4 = 25
+
+
+Pénalités lignes  : {'S1': 1, 'S2': 1, 'S3': 1}
+Pénalités colonnes: {'D1': 6, 'D2': 4, 'D3': 5}
+Pénalité max : colonnes ['D1'] avec 6
+Arête choisie : P1 -> C1 = 35
+
+
+Pénalités lignes  : {'S2': 1, 'S3': 1}
+Pénalités colonnes: {'D1': 2, 'D2': 5, 'D3': 5}
+Pénalité max : colonnes ['D2', 'D3'] avec 5
+Arête choisie : P2 -> C2 = 30
+
+
+Pénalités lignes  : {'S3': 1}
+Pénalités colonnes: {'D1': 19, 'D2': 21, 'D3': 20}
+Pénalité max : colonnes ['D2'] avec 21
+Arête choisie : P3 -> C2 = 45
+
+
+Pénalités lignes  : {'S3': 1}
+Pénalités colonnes: {'D1': 19, 'D3': 20}
+Pénalité max : colonnes ['D3'] avec 20
+Arête choisie : P3 -> C3 = 30
+
+
+Pénalités lignes  : {'S3': 19}
+Pénalités colonnes: {'D1': 19}
+Pénalité max : lignes ['S3'] avec 19
+Arête choisie : P3 -> C1 = 15
+
+
+Avec l'algorithme Balas-Hammer, on obtient la proposition initiale suivante:
+
+                   Proposition initiale           
+              D1        D2        D3        D4     
+          +---------+---------+---------+---------+
+      S1  |   35    |    0    |    0    |   25    |  60
+      S2  |    0    |   30    |    0    |    0    |  30
+      S3  |   15    |   45    |   30    |    0    |  90
+          +---------+---------+---------+---------+
+              50        75        30        25    
+
+Maintenant que nous avons la proposition de transport initiale, nous allons l'optimiser avec la méthode du marche-pied avec potentiels.
+Pour cela, il faut que la proposition soit non-dégénérée. Vérifions si elle possède un cycle initialement :
+
+=> La proposition de transport initiale est acyclique. Vérifions qu'elle est connexe :
+
+=> a proposition est connexe
+La proposition de transport est connexe et acyclique. Son graphe biparti associé est donc un arbre.
+
+Potentiels calculés (avec E(P1) = 0) :
+  E(P1) = 0
+  E(P2) = 3
+  E(P3) = 8
+  E(C1) = -11
+  E(C2) = -13
+  E(C3) = -12
+  E(C4) = -10
+
+                     Coûts potentiels             
+             C1        C2        C3        C4     
+         +---------+---------+---------+---------+
+      P1 |   11    |   13    |   12    |   10    |  60
+      P2 |   14    |   16    |   15    |   13    |  30
+      P3 |   19    |   21    |   20    |   18    |  90
+         +---------+---------+---------+---------+
+             50        75        30        25    
+
+                      Coûts marginaux             
+             C1        C2        C3        C4     
+         +---------+---------+---------+---------+
+      P1 |    0    |   -1    |   -2    |    0    |  60
+      P2 |    3    |    0    |    0    |    5    |  30
+      P3 |    0    |    0    |    0    |    4    |  90
+         +---------+---------+---------+---------+
+             50        75        30        25    
+
+Meilleure arête améliorante : (P1, C3) [coût marginal = -2]
+Arête ajoutée : (S1, D3)
+Cycle détecté : C3 -> P1 -> C1 -> P3
+
+Conditions pour chaque case du cycle :
+  Case (1, 3) [+] : valeur actuelle = 0
+  Case (1, 1) [-] : valeur actuelle = 35
+  Case (3, 1) [+] : valeur actuelle = 15
+
+Theta (valeur maximale transférable) = 35
+
+Arête(s) supprimée(s) : ['(1, 1)']
+
+=> a proposition est connexe
+La proposition de transport est connexe et acyclique. Son graphe biparti associé est donc un arbre.
+
+Potentiels calculés (avec E(P1) = 0) :
+  E(P1) = 0
+  E(P2) = 5
+  E(P3) = 10
+  E(C1) = -9
+  E(C2) = -11
+  E(C3) = -10
+  E(C4) = -10
+
+                     Coûts potentiels             
+             C1        C2        C3        C4     
+         +---------+---------+---------+---------+
+      P1 |    9    |   11    |   10    |   10    |  60
+      P2 |   14    |   16    |   15    |   15    |  30
+      P3 |   19    |   21    |   20    |   20    |  90
+         +---------+---------+---------+---------+
+             50        75        30        25    
+
+                      Coûts marginaux             
+             C1        C2        C3        C4     
+         +---------+---------+---------+---------+
+      P1 |    2    |    1    |    0    |    0    |  60
+      P2 |    3    |    0    |    0    |    3    |  30
+      P3 |    0    |    0    |    0    |    2    |  90
+         +---------+---------+---------+---------+
+             50        75        30        25    
+
+=> Tous les coûts marginaux sont positifs : la proposition est optimale
+
+A l'aide de la méthode du marche-pied avec potentiels, nous avons donc :
+
+                   Proposition optimale           
+              D1        D2        D3        D4     
+          +---------+---------+---------+---------+
+      S1  |    0    |    0    |   35    |   25    |  60
+      S2  |    0    |   30    |    0    |    0    |  30
+      S3  |   50    |   45    |   30    |    0    |  90
+          +---------+---------+---------+---------+
+              50        75        30        25    
+
+Le cout total de cette proposition de transport est :  3575.0

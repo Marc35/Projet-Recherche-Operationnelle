@@ -1,0 +1,80 @@
+Voici la matrice des couts initiaux du problème 4 :
+           Matrice des couts  
+              D1        D2     
+          +---------+---------+
+      S1  |   30    |    1    |  600
+      S2  |    1    |   30    |  500
+          +---------+---------+
+              100      1000   
+
+Pénalités lignes  : {'S1': 29, 'S2': 29}
+Pénalités colonnes: {'D1': 29, 'D2': 29}
+Pénalité max : lignes ['S1', 'S2'] avec 29
+Arête choisie : P1 -> C2 = 600
+
+
+Pénalités lignes  : {'S2': 29}
+Pénalités colonnes: {'D1': 1, 'D2': 30}
+Pénalité max : colonnes ['D2'] avec 30
+Arête choisie : P2 -> C2 = 400
+
+
+Pénalités lignes  : {'S2': 1}
+Pénalités colonnes: {'D1': 1}
+Pénalité max : lignes ['S2'] avec 1
+Arête choisie : P2 -> C1 = 100
+
+
+Avec l'algorithme Balas-Hammer, on obtient la proposition initiale suivante:
+
+         Proposition initiale 
+              D1        D2     
+          +---------+---------+
+      S1  |    0    |   600   |  600
+      S2  |   100   |   400   |  500
+          +---------+---------+
+              100      1000   
+
+Maintenant que nous avons la proposition de transport initiale, nous allons l'optimiser avec la méthode du marche-pied avec potentiels.
+Pour cela, il faut que la proposition soit non-dégénérée. Vérifions si elle possède un cycle initialement :
+
+=> La proposition de transport initiale est acyclique. Vérifions qu'elle est connexe :
+
+=> a proposition est connexe
+La proposition de transport est connexe et acyclique. Son graphe biparti associé est donc un arbre.
+
+Potentiels calculés (avec E(P1) = 0) :
+  E(P1) = 0
+  E(P2) = 29
+  E(C1) = 28
+  E(C2) = -1
+
+           Coûts potentiels   
+             C1        C2     
+         +---------+---------+
+      P1 |   -28   |    1    |  600
+      P2 |    1    |   30    |  500
+         +---------+---------+
+             100      1000   
+
+            Coûts marginaux   
+             C1        C2     
+         +---------+---------+
+      P1 |   58    |    0    |  600
+      P2 |    0    |    0    |  500
+         +---------+---------+
+             100      1000   
+
+=> Tous les coûts marginaux sont positifs : la proposition est optimale
+
+A l'aide de la méthode du marche-pied avec potentiels, nous avons donc :
+
+         Proposition optimale 
+              D1        D2     
+          +---------+---------+
+      S1  |    0    |   600   |  600
+      S2  |   100   |   400   |  500
+          +---------+---------+
+              100      1000   
+
+Le cout total de cette proposition de transport est :  12700.0

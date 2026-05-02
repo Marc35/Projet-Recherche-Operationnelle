@@ -1,0 +1,99 @@
+Voici la matrice des couts initiaux du problème 5 :
+                Matrice des couts       
+              D1        D2        D3     
+          +---------+---------+---------+
+      S1  |    5    |    7    |    8    |  25
+      S2  |    6    |    8    |    5    |  25
+      S3  |    6    |    7    |    7    |  25
+          +---------+---------+---------+
+              35        20        20    
+
+Pénalités lignes  : {'S1': 2, 'S2': 1, 'S3': 1}
+Pénalités colonnes: {'D1': 1, 'D2': 0, 'D3': 2}
+Pénalité max : lignes ['S1'] avec 2
+Arête choisie : P1 -> C1 = 25
+
+
+Pénalités lignes  : {'S2': 1, 'S3': 1}
+Pénalités colonnes: {'D1': 0, 'D2': 1, 'D3': 2}
+Pénalité max : colonnes ['D3'] avec 2
+Arête choisie : P2 -> C3 = 20
+
+
+Pénalités lignes  : {'S2': 2, 'S3': 1}
+Pénalités colonnes: {'D1': 0, 'D2': 1}
+Pénalité max : lignes ['S2'] avec 2
+Arête choisie : P2 -> C1 = 5
+
+
+Pénalités lignes  : {'S3': 1}
+Pénalités colonnes: {'D1': 6, 'D2': 7}
+Pénalité max : colonnes ['D2'] avec 7
+Arête choisie : P3 -> C2 = 20
+
+
+Pénalités lignes  : {'S3': 6}
+Pénalités colonnes: {'D1': 6}
+Pénalité max : lignes ['S3'] avec 6
+Arête choisie : P3 -> C1 = 5
+
+
+Avec l'algorithme Balas-Hammer, on obtient la proposition initiale suivante:
+
+              Proposition initiale      
+              D1        D2        D3     
+          +---------+---------+---------+
+      S1  |   25    |    0    |    0    |  25
+      S2  |    5    |    0    |   20    |  25
+      S3  |    5    |   20    |    0    |  25
+          +---------+---------+---------+
+              35        20        20    
+
+Maintenant que nous avons la proposition de transport initiale, nous allons l'optimiser avec la méthode du marche-pied avec potentiels.
+Pour cela, il faut que la proposition soit non-dégénérée. Vérifions si elle possède un cycle initialement :
+
+=> La proposition de transport initiale est acyclique. Vérifions qu'elle est connexe :
+
+=> a proposition est connexe
+La proposition de transport est connexe et acyclique. Son graphe biparti associé est donc un arbre.
+
+Potentiels calculés (avec E(P1) = 0) :
+  E(P1) = 0
+  E(P2) = 1
+  E(P3) = 1
+  E(C1) = -5
+  E(C2) = -6
+  E(C3) = -4
+
+                Coûts potentiels        
+             C1        C2        C3     
+         +---------+---------+---------+
+      P1 |    5    |    6    |    4    |  25
+      P2 |    6    |    7    |    5    |  25
+      P3 |    6    |    7    |    5    |  25
+         +---------+---------+---------+
+             35        20        20    
+
+                 Coûts marginaux        
+             C1        C2        C3     
+         +---------+---------+---------+
+      P1 |    0    |    1    |    4    |  25
+      P2 |    0    |    1    |    0    |  25
+      P3 |    0    |    0    |    2    |  25
+         +---------+---------+---------+
+             35        20        20    
+
+=> Tous les coûts marginaux sont positifs : la proposition est optimale
+
+A l'aide de la méthode du marche-pied avec potentiels, nous avons donc :
+
+              Proposition optimale      
+              D1        D2        D3     
+          +---------+---------+---------+
+      S1  |   25    |    0    |    0    |  25
+      S2  |    5    |    0    |   20    |  25
+      S3  |    5    |   20    |    0    |  25
+          +---------+---------+---------+
+              35        20        20    
+
+Le cout total de cette proposition de transport est :  425.0

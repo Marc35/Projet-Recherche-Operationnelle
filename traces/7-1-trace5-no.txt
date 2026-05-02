@@ -1,0 +1,153 @@
+Voici la matrice des couts initiaux du problème 5 :
+                Matrice des couts       
+              D1        D2        D3     
+          +---------+---------+---------+
+      S1  |    5    |    7    |    8    |  25
+      S2  |    6    |    8    |    5    |  25
+      S3  |    6    |    7    |    7    |  25
+          +---------+---------+---------+
+              35        20        20    
+
+Avec l'algorithme Nord-Ouest, on obtient la proposition initiale suivante:
+
+              Proposition initiale      
+              D1        D2        D3     
+          +---------+---------+---------+
+      S1  |   25    |    0    |    0    |  25
+      S2  |   10    |   15    |    0    |  25
+      S3  |    0    |    5    |   20    |  25
+          +---------+---------+---------+
+              35        20        20    
+
+Maintenant que nous avons la proposition de transport initiale, nous allons l'optimiser avec la méthode du marche-pied avec potentiels.
+Pour cela, il faut que la proposition soit non-dégénérée. Vérifions si elle possède un cycle initialement :
+
+=> La proposition de transport initiale est acyclique. Vérifions qu'elle est connexe :
+
+=> a proposition est connexe
+La proposition de transport est connexe et acyclique. Son graphe biparti associé est donc un arbre.
+
+Potentiels calculés (avec E(P1) = 0) :
+  E(P1) = 0
+  E(P2) = 1
+  E(P3) = 0
+  E(C1) = -5
+  E(C2) = -7
+  E(C3) = -7
+
+                Coûts potentiels        
+             C1        C2        C3     
+         +---------+---------+---------+
+      P1 |    5    |    7    |    7    |  25
+      P2 |    6    |    8    |    8    |  25
+      P3 |    5    |    7    |    7    |  25
+         +---------+---------+---------+
+             35        20        20    
+
+                 Coûts marginaux        
+             C1        C2        C3     
+         +---------+---------+---------+
+      P1 |    0    |    0    |    1    |  25
+      P2 |    0    |    0    |   -3    |  25
+      P3 |    1    |    0    |    0    |  25
+         +---------+---------+---------+
+             35        20        20    
+
+Meilleure arête améliorante : (P2, C3) [coût marginal = -3]
+Arête ajoutée : (S2, D3)
+Cycle détecté : C3 -> P2 -> C2 -> P3
+
+Conditions pour chaque case du cycle :
+  Case (2, 3) [+] : valeur actuelle = 0
+  Case (2, 2) [-] : valeur actuelle = 15
+  Case (3, 2) [+] : valeur actuelle = 5
+
+Theta (valeur maximale transférable) = 15
+
+Arête(s) supprimée(s) : ['(2, 2)']
+
+=> a proposition est connexe
+La proposition de transport est connexe et acyclique. Son graphe biparti associé est donc un arbre.
+
+Potentiels calculés (avec E(P1) = 0) :
+  E(P1) = 0
+  E(P2) = 1
+  E(P3) = 3
+  E(C1) = -5
+  E(C2) = -4
+  E(C3) = -4
+
+                Coûts potentiels        
+             C1        C2        C3     
+         +---------+---------+---------+
+      P1 |    5    |    4    |    4    |  25
+      P2 |    6    |    5    |    5    |  25
+      P3 |    8    |    7    |    7    |  25
+         +---------+---------+---------+
+             35        20        20    
+
+                 Coûts marginaux        
+             C1        C2        C3     
+         +---------+---------+---------+
+      P1 |    0    |    3    |    4    |  25
+      P2 |    0    |    3    |    0    |  25
+      P3 |   -2    |    0    |    0    |  25
+         +---------+---------+---------+
+             35        20        20    
+
+Meilleure arête améliorante : (P3, C1) [coût marginal = -2]
+Arête ajoutée : (S3, D1)
+Cycle détecté : P3 -> C1 -> P2 -> C3
+
+Conditions pour chaque case du cycle :
+  Case (3, 1) [+] : valeur actuelle = 0
+  Case (2, 1) [-] : valeur actuelle = 10
+  Case (2, 3) [+] : valeur actuelle = 15
+
+Theta (valeur maximale transférable) = 10
+
+Arête(s) supprimée(s) : ['(2, 1)']
+
+=> a proposition est connexe
+La proposition de transport est connexe et acyclique. Son graphe biparti associé est donc un arbre.
+
+Potentiels calculés (avec E(P1) = 0) :
+  E(P1) = 0
+  E(P2) = -1
+  E(P3) = 1
+  E(C1) = -5
+  E(C2) = -6
+  E(C3) = -6
+
+                Coûts potentiels        
+             C1        C2        C3     
+         +---------+---------+---------+
+      P1 |    5    |    6    |    6    |  25
+      P2 |    4    |    5    |    5    |  25
+      P3 |    6    |    7    |    7    |  25
+         +---------+---------+---------+
+             35        20        20    
+
+                 Coûts marginaux        
+             C1        C2        C3     
+         +---------+---------+---------+
+      P1 |    0    |    1    |    2    |  25
+      P2 |    2    |    3    |    0    |  25
+      P3 |    0    |    0    |    0    |  25
+         +---------+---------+---------+
+             35        20        20    
+
+=> Tous les coûts marginaux sont positifs : la proposition est optimale
+
+A l'aide de la méthode du marche-pied avec potentiels, nous avons donc :
+
+              Proposition optimale      
+              D1        D2        D3     
+          +---------+---------+---------+
+      S1  |   25    |    0    |    0    |  25
+      S2  |    0    |    0    |   25    |  25
+      S3  |   10    |   20    |   20    |  25
+          +---------+---------+---------+
+              35        20        20    
+
+Le cout total de cette proposition de transport est :  590.0
