@@ -86,10 +86,9 @@ def maximize_cycle(transport_matrix, basis_matrix, cycle, entering_edge=None, co
 
     # Reconstruction des arêtes du cycle avec leur signe
     edges = []
-    cycle_closed = cycle + [cycle[0]]  # ferme le cycle
-    for k in range(len(cycle_closed) - 1):
-        u = cycle_closed[k]
-        v = cycle_closed[k + 1]
+    for k in range(len(cycle) - 1):
+        u = cycle[k]
+        v = cycle[k + 1]
         i = u[1] if u[0] == 0 else v[1]
         j = v[1] if v[0] == 1 else u[1]
         # Le premier nœud est-il une source (type 0) ?
@@ -98,19 +97,14 @@ def maximize_cycle(transport_matrix, basis_matrix, cycle, entering_edge=None, co
         sign = "+" if is_plus else "-"
         edges.append((i, j, sign))
 
-    # APRÈS
     if entering_edge is not None:
+        # Cas marche-pied : la proposition de transport est cyclique après qu'une arrête est été rajouté
+        # L'arrête entrant est toujours en "+"
         ei, ej = entering_edge
-        # Trouver k de l'arête entrante
-        entering_k = None
-        for k_idx, (i, j, sign) in enumerate(edges):
-            if i == ei and j == ej:
-                entering_k = k_idx
+        for i, j, sign in edges:
+            if i == ei and j == ej and sign == "-":
+                edges = [(i, j, "-" if sign == "+" else "+") for i, j, sign in edges]
                 break
-        # L'arête entrante doit être "+", donc k pair
-        # Si elle est à un k impair, on inverse tous les signes
-        if entering_k is not None and entering_k % 2 == 1:
-            edges = [(i, j, "-" if sign == "+" else "+") for i, j, sign in edges]
 
     elif cost_matrix is not None:
         # Cas initiale : la proposition initiale de transport est cyclcique
