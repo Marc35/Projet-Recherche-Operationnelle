@@ -55,6 +55,7 @@ Conditions pour chaque case du cycle :
   Case (1, 2) [+] : valeur actuelle = 500
   Case (1, 1) [-] : valeur actuelle = 100
   Case (2, 1) [+] : valeur actuelle = 0
+  Case (2, 2) [-] : valeur actuelle = 500
 
 Theta (valeur maximale transférable) = 100
 
@@ -93,8 +94,8 @@ A l'aide de la méthode du marche-pied avec potentiels, nous avons donc :
               D1        D2     
           +---------+---------+
       S1  |    0    |   600   |  600
-      S2  |   100   |   500   |  500
+      S2  |   100   |   400   |  500
           +---------+---------+
               100      1000   
 
-Le cout total de cette proposition de transport est :  38000.0
+Le cout total de cette proposition de transport est :  33000.0

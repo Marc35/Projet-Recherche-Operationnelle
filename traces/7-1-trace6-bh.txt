@@ -98,8 +98,53 @@ Conditions pour chaque case du cycle :
   Case (1, 3) [+] : valeur actuelle = 0
   Case (1, 1) [-] : valeur actuelle = 35
   Case (3, 1) [+] : valeur actuelle = 15
+  Case (3, 3) [-] : valeur actuelle = 30
 
-Theta (valeur maximale transférable) = 35
+Theta (valeur maximale transférable) = 30
+
+Arête(s) supprimée(s) : ['(3, 3)']
+
+=> a proposition est connexe
+La proposition de transport est connexe et acyclique. Son graphe biparti associé est donc un arbre.
+
+Potentiels calculés (avec E(P1) = 0) :
+  E(P1) = 0
+  E(P2) = 3
+  E(P3) = 8
+  E(C1) = -11
+  E(C2) = -13
+  E(C3) = -10
+  E(C4) = -10
+
+                     Coûts potentiels             
+              C1        C2        C3        C4     
+          +---------+---------+---------+---------+
+      P1  |   11    |   13    |   10    |   10    |  60
+      P2  |   14    |   16    |   13    |   13    |  30
+      P3  |   19    |   21    |   18    |   18    |  90
+          +---------+---------+---------+---------+
+              50        75        30        25    
+
+                      Coûts marginaux             
+              C1        C2        C3        C4     
+          +---------+---------+---------+---------+
+      P1  |    0    |   -1    |    0    |    0    |  60
+      P2  |    3    |    0    |    2    |    5    |  30
+      P3  |    0    |    0    |    2    |    4    |  90
+          +---------+---------+---------+---------+
+              50        75        30        25    
+
+Meilleure arête améliorante : (P1, C2) [coût marginal = -1]
+Arête ajoutée : (S1, D2)
+Cycle détecté : C2 -> P1 -> C1 -> P3
+
+Conditions pour chaque case du cycle :
+  Case (1, 2) [+] : valeur actuelle = 0
+  Case (1, 1) [-] : valeur actuelle = 5
+  Case (3, 1) [+] : valeur actuelle = 45
+  Case (3, 2) [-] : valeur actuelle = 45
+
+Theta (valeur maximale transférable) = 5
 
 Arête(s) supprimée(s) : ['(1, 1)']
 
@@ -108,28 +153,28 @@ La proposition de transport est connexe et acyclique. Son graphe biparti associ�
 
 Potentiels calculés (avec E(P1) = 0) :
   E(P1) = 0
-  E(P2) = 5
-  E(P3) = 10
-  E(C1) = -9
-  E(C2) = -11
+  E(P2) = 4
+  E(P3) = 9
+  E(C1) = -10
+  E(C2) = -12
   E(C3) = -10
   E(C4) = -10
 
                      Coûts potentiels             
               C1        C2        C3        C4     
           +---------+---------+---------+---------+
-      P1  |    9    |   11    |   10    |   10    |  60
-      P2  |   14    |   16    |   15    |   15    |  30
-      P3  |   19    |   21    |   20    |   20    |  90
+      P1  |   10    |   12    |   10    |   10    |  60
+      P2  |   14    |   16    |   14    |   14    |  30
+      P3  |   19    |   21    |   19    |   19    |  90
           +---------+---------+---------+---------+
               50        75        30        25    
 
                       Coûts marginaux             
               C1        C2        C3        C4     
           +---------+---------+---------+---------+
-      P1  |    2    |    1    |    0    |    0    |  60
-      P2  |    3    |    0    |    0    |    3    |  30
-      P3  |    0    |    0    |    0    |    2    |  90
+      P1  |    1    |    0    |    0    |    0    |  60
+      P2  |    3    |    0    |    1    |    4    |  30
+      P3  |    0    |    0    |    1    |    3    |  90
           +---------+---------+---------+---------+
               50        75        30        25    
 
@@ -140,10 +185,10 @@ A l'aide de la méthode du marche-pied avec potentiels, nous avons donc :
                    Proposition optimale           
               D1        D2        D3        D4     
           +---------+---------+---------+---------+
-      S1  |    0    |    0    |   35    |   25    |  60
+      S1  |    0    |    5    |   30    |   25    |  60
       S2  |    0    |   30    |    0    |    0    |  30
-      S3  |   50    |   45    |   30    |    0    |  90
+      S3  |   50    |   40    |    0    |    0    |  90
           +---------+---------+---------+---------+
               50        75        30        25    
 
-Le cout total de cette proposition de transport est :  3575.0
+Le cout total de cette proposition de transport est :  2880.0

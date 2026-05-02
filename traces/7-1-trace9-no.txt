@@ -105,86 +105,18 @@ Conditions pour chaque case du cycle :
   Case (6, 1) [+] : valeur actuelle = 0
   Case (4, 1) [-] : valeur actuelle = 100
   Case (4, 2) [+] : valeur actuelle = 0
-
-Theta (valeur maximale transférable) = 100
-
-Arête(s) supprimée(s) : ['(4, 1)']
-
-=> a proposition est connexe
-La proposition de transport est connexe et acyclique. Son graphe biparti associé est donc un arbre.
-
-Potentiels calculés (avec E(P1) = 0) :
-  E(P1) = 0
-  E(P2) = -20
-  E(P3) = -21
-  E(P4) = -61
-  E(P5) = -23
-  E(P6) = -25
-  E(P7) = 0
-  E(C1) = -30
-  E(C2) = -63
-  E(C3) = -22
-
-                Coûts potentiels        
-              C1        C2        C3     
-          +---------+---------+---------+
-      P1  |   30    |   63    |   22    |  100
-      P2  |   10    |   43    |    2    |  100
-      P3  |    9    |   42    |    1    |  100
-      P4  |   -31   |    2    |   -39   |  100
-      P5  |    7    |   40    |   -1    |  100
-      P6  |    5    |   38    |   -3    |  100
-      P7  |   30    |   63    |   22    |  100
-          +---------+---------+---------+
-              400       200       100   
-
-                 Coûts marginaux        
-              C1        C2        C3     
-          +---------+---------+---------+
-      P1  |    0    |   -43   |   -7    |  100
-      P2  |    0    |    7    |    0    |  100
-      P3  |    0    |   -32   |   29    |  100
-      P4  |   37    |    0    |   68    |  100
-      P5  |   43    |    0    |    4    |  100
-      P6  |    0    |    0    |   30    |  100
-      P7  |   20    |   -59   |    0    |  100
-          +---------+---------+---------+
-              400       200       100   
-
-Meilleure arête améliorante : (P7, C2) [coût marginal = -59]
-Arête ajoutée : (S7, D2)
-Cycle détecté : C2 -> P6 -> C1 -> P2 -> C3 -> P7
-
-Conditions pour chaque case du cycle :
   Case (6, 2) [-] : valeur actuelle = 100
-  Case (6, 1) [+] : valeur actuelle = 100
-  Case (2, 1) [-] : valeur actuelle = 100
-  Case (2, 3) [+] : valeur actuelle = 0
-  Case (7, 3) [-] : valeur actuelle = 100
 
 Theta (valeur maximale transférable) = 100
 
-Arête(s) supprimée(s) : ['(6, 2)', '(2, 1)', '(7, 3)']
-
-La proposition est non connexe (3 sous-graphes)
-
-  Sous-graphe 1 : Offres ['P1', 'P3', 'P6'] | Demandes ['C1']
-  Sous-graphe 2 : Offres ['P2'] | Demandes ['C3']
-  Sous-graphe 3 : Offres ['P4', 'P5', 'P7'] | Demandes ['C2']
-
-=> Arrête de base ajouté en case (5, 3) [coût = 3] pour relier les sous-graphes 2 et 3
-Maintenant une arrête à été ajouté entre deux sous graphes.
-Vérifions que cette étape n'a pas créée de cycle :
-
-=> La proposition de transport est acyclique (l'ajout d'une arrête n'a pas créé de cycle).
-Vérifons qu'elle est connexe
+Arête(s) supprimée(s) : ['(4, 1)', '(6, 2)']
 
 La proposition est non connexe (2 sous-graphes)
 
-  Sous-graphe 1 : Offres ['P1', 'P3', 'P6'] | Demandes ['C1']
-  Sous-graphe 2 : Offres ['P2', 'P5', 'P4', 'P7'] | Demandes ['C3', 'C2']
+  Sous-graphe 1 : Offres ['P1', 'P2', 'P3', 'P6', 'P7'] | Demandes ['C1', 'C3']
+  Sous-graphe 2 : Offres ['P4', 'P5'] | Demandes ['C2']
 
-=> Arrête de base ajouté en case (4, 1) [coût = 6] pour relier les sous-graphes 1 et 2
+=> Arrête de base ajouté en case (5, 3) [coût = 3] pour relier les sous-graphes 1 et 2
 Maintenant une arrête à été ajouté entre deux sous graphes.
 Vérifions que cette étape n'a pas créée de cycle :
 
@@ -192,62 +124,6 @@ Vérifions que cette étape n'a pas créée de cycle :
 Vérifons qu'elle est connexe
 
 => a proposition est connexe
-
-Potentiels calculés (avec E(P1) = 0) :
-  E(P1) = 0
-  E(P2) = 13
-  E(P3) = -21
-  E(P4) = -24
-  E(P5) = 14
-  E(P6) = -25
-  E(P7) = -22
-  E(C1) = -30
-  E(C2) = -26
-  E(C3) = 11
-
-                Coûts potentiels        
-              C1        C2        C3     
-          +---------+---------+---------+
-      P1  |   30    |   26    |   -11   |  100
-      P2  |   43    |   39    |    2    |  100
-      P3  |    9    |    5    |   -32   |  100
-      P4  |    6    |    2    |   -35   |  100
-      P5  |   44    |   40    |    3    |  100
-      P6  |    5    |    1    |   -36   |  100
-      P7  |    8    |    4    |   -33   |  100
-          +---------+---------+---------+
-              400       200       100   
-
-                 Coûts marginaux        
-              C1        C2        C3     
-          +---------+---------+---------+
-      P1  |    0    |   -6    |   26    |  100
-      P2  |   -33   |   11    |    0    |  100
-      P3  |    0    |    5    |   62    |  100
-      P4  |    0    |    0    |   64    |  100
-      P5  |    6    |    0    |    0    |  100
-      P6  |    0    |   37    |   63    |  100
-      P7  |   42    |    0    |   55    |  100
-          +---------+---------+---------+
-              400       200       100   
-
-Meilleure arête améliorante : (P2, C1) [coût marginal = -33]
-Arête ajoutée : (S2, D1)
-Cycle détecté : C2 -> P4 -> C1 -> P2 -> C3 -> P5
-
-Conditions pour chaque case du cycle :
-  Case (4, 2) [+] : valeur actuelle = 100
-  Case (4, 1) [-] : valeur actuelle = 0
-  Case (2, 1) [+] : valeur actuelle = 0
-  Case (2, 3) [-] : valeur actuelle = 100
-  Case (5, 3) [+] : valeur actuelle = 0
-
-Theta (valeur maximale transférable) = 0
-
-Arête(s) supprimée(s) : ['(4, 1)']
-
-=> a proposition est connexe
-La proposition de transport est connexe et acyclique. Son graphe biparti associé est donc un arbre.
 
 Potentiels calculés (avec E(P1) = 0) :
   E(P1) = 0
@@ -256,7 +132,7 @@ Potentiels calculés (avec E(P1) = 0) :
   E(P4) = -57
   E(P5) = -19
   E(P6) = -25
-  E(P7) = -55
+  E(P7) = 0
   E(C1) = -30
   E(C2) = -59
   E(C3) = -22
@@ -270,7 +146,7 @@ Potentiels calculés (avec E(P1) = 0) :
       P4  |   -27   |    2    |   -35   |  100
       P5  |   11    |   40    |    3    |  100
       P6  |    5    |   34    |   -3    |  100
-      P7  |   -25   |    4    |   -33   |  100
+      P7  |   30    |   59    |   22    |  100
           +---------+---------+---------+
               400       200       100   
 
@@ -283,42 +159,28 @@ Potentiels calculés (avec E(P1) = 0) :
       P4  |   33    |    0    |   64    |  100
       P5  |   39    |    0    |    0    |  100
       P6  |    0    |    4    |   30    |  100
-      P7  |   75    |    0    |   55    |  100
+      P7  |   20    |   -55   |    0    |  100
           +---------+---------+---------+
               400       200       100   
 
-Meilleure arête améliorante : (P1, C2) [coût marginal = -39]
-Arête ajoutée : (S1, D2)
-Cycle détecté : P5 -> C2 -> P1 -> C1 -> P2 -> C3
+Meilleure arête améliorante : (P7, C2) [coût marginal = -55]
+Arête ajoutée : (S7, D2)
+Cycle détecté : P7 -> C3 -> P5 -> C2
 
 Conditions pour chaque case du cycle :
+  Case (7, 3) [-] : valeur actuelle = 100
+  Case (5, 3) [+] : valeur actuelle = 0
   Case (5, 2) [-] : valeur actuelle = 100
-  Case (1, 2) [+] : valeur actuelle = 0
-  Case (1, 1) [-] : valeur actuelle = 100
-  Case (2, 1) [+] : valeur actuelle = 0
-  Case (2, 3) [-] : valeur actuelle = 100
+  Case (7, 2) [+] : valeur actuelle = 0
 
 Theta (valeur maximale transférable) = 100
 
-Arête(s) supprimée(s) : ['(5, 2)', '(1, 1)', '(2, 3)']
-
-La proposition est non connexe (3 sous-graphes)
-
-  Sous-graphe 1 : Offres ['P1', 'P4', 'P7'] | Demandes ['C2']
-  Sous-graphe 2 : Offres ['P2', 'P3', 'P6'] | Demandes ['C1']
-  Sous-graphe 3 : Offres ['P5'] | Demandes ['C3']
-
-=> Arrête de base ajouté en case (2, 3) [coût = 2] pour relier les sous-graphes 2 et 3
-Maintenant une arrête à été ajouté entre deux sous graphes.
-Vérifions que cette étape n'a pas créée de cycle :
-
-=> La proposition de transport est acyclique (l'ajout d'une arrête n'a pas créé de cycle).
-Vérifons qu'elle est connexe
+Arête(s) supprimée(s) : ['(7, 3)', '(5, 2)']
 
 La proposition est non connexe (2 sous-graphes)
 
-  Sous-graphe 1 : Offres ['P1', 'P4', 'P7'] | Demandes ['C2']
-  Sous-graphe 2 : Offres ['P2', 'P3', 'P6', 'P5'] | Demandes ['C1', 'C3']
+  Sous-graphe 1 : Offres ['P1', 'P2', 'P3', 'P6', 'P5'] | Demandes ['C1', 'C3']
+  Sous-graphe 2 : Offres ['P4', 'P7'] | Demandes ['C2']
 
 => Arrête de base ajouté en case (4, 1) [coût = 6] pour relier les sous-graphes 1 et 2
 Maintenant une arrête à été ajouté entre deux sous graphes.
@@ -331,20 +193,20 @@ Vérifons qu'elle est connexe
 
 Potentiels calculés (avec E(P1) = 0) :
   E(P1) = 0
-  E(P2) = -14
-  E(P3) = -15
-  E(P4) = -18
-  E(P5) = -13
-  E(P6) = -19
-  E(P7) = -16
-  E(C1) = -24
-  E(C2) = -20
-  E(C3) = -16
+  E(P2) = -20
+  E(P3) = -21
+  E(P4) = -24
+  E(P5) = -19
+  E(P6) = -25
+  E(P7) = -22
+  E(C1) = -30
+  E(C2) = -26
+  E(C3) = -22
 
                 Coûts potentiels        
               C1        C2        C3     
           +---------+---------+---------+
-      P1  |   24    |   20    |   16    |  100
+      P1  |   30    |   26    |   22    |  100
       P2  |   10    |    6    |    2    |  100
       P3  |    9    |    5    |    1    |  100
       P4  |    6    |    2    |   -2    |  100
@@ -357,7 +219,7 @@ Potentiels calculés (avec E(P1) = 0) :
                  Coûts marginaux        
               C1        C2        C3     
           +---------+---------+---------+
-      P1  |    6    |    0    |   -1    |  100
+      P1  |    0    |   -6    |   -7    |  100
       P2  |    0    |   44    |    0    |  100
       P3  |    0    |    5    |   29    |  100
       P4  |    0    |    0    |   31    |  100
@@ -367,25 +229,79 @@ Potentiels calculés (avec E(P1) = 0) :
           +---------+---------+---------+
               400       200       100   
 
-Meilleure arête améliorante : (P1, C3) [coût marginal = -1]
+Meilleure arête améliorante : (P1, C3) [coût marginal = -7]
 Arête ajoutée : (S1, D3)
-Cycle détecté : P2 -> C3 -> P1 -> C2 -> P4 -> C1
+Cycle détecté : C3 -> P1 -> C1 -> P2
 
 Conditions pour chaque case du cycle :
-  Case (2, 3) [-] : valeur actuelle = 0
   Case (1, 3) [+] : valeur actuelle = 0
-  Case (1, 2) [-] : valeur actuelle = 100
-  Case (4, 2) [+] : valeur actuelle = 100
-  Case (4, 1) [-] : valeur actuelle = 0
+  Case (1, 1) [-] : valeur actuelle = 100
+  Case (2, 1) [+] : valeur actuelle = 100
+  Case (2, 3) [-] : valeur actuelle = 0
 
 Theta (valeur maximale transférable) = 0
 
-Arête(s) supprimée(s) : ['(2, 3)', '(4, 1)']
+Arête(s) supprimée(s) : ['(2, 3)']
+
+=> a proposition est connexe
+La proposition de transport est connexe et acyclique. Son graphe biparti associé est donc un arbre.
+
+Potentiels calculés (avec E(P1) = 0) :
+  E(P1) = 0
+  E(P2) = -20
+  E(P3) = -21
+  E(P4) = -24
+  E(P5) = -12
+  E(P6) = -25
+  E(P7) = -22
+  E(C1) = -30
+  E(C2) = -26
+  E(C3) = -15
+
+                Coûts potentiels        
+              C1        C2        C3     
+          +---------+---------+---------+
+      P1  |   30    |   26    |   15    |  100
+      P2  |   10    |    6    |   -5    |  100
+      P3  |    9    |    5    |   -6    |  100
+      P4  |    6    |    2    |   -9    |  100
+      P5  |   18    |   14    |    3    |  100
+      P6  |    5    |    1    |   -10   |  100
+      P7  |    8    |    4    |   -7    |  100
+          +---------+---------+---------+
+              400       200       100   
+
+                 Coûts marginaux        
+              C1        C2        C3     
+          +---------+---------+---------+
+      P1  |    0    |   -6    |    0    |  100
+      P2  |    0    |   44    |    7    |  100
+      P3  |    0    |    5    |   36    |  100
+      P4  |    0    |    0    |   38    |  100
+      P5  |   32    |   26    |    0    |  100
+      P6  |    0    |   37    |   37    |  100
+      P7  |   42    |    0    |   29    |  100
+          +---------+---------+---------+
+              400       200       100   
+
+Meilleure arête améliorante : (P1, C2) [coût marginal = -6]
+Arête ajoutée : (S1, D2)
+Cycle détecté : C2 -> P1 -> C1 -> P4
+
+Conditions pour chaque case du cycle :
+  Case (1, 2) [+] : valeur actuelle = 0
+  Case (1, 1) [-] : valeur actuelle = 100
+  Case (4, 1) [+] : valeur actuelle = 0
+  Case (4, 2) [-] : valeur actuelle = 100
+
+Theta (valeur maximale transférable) = 100
+
+Arête(s) supprimée(s) : ['(1, 1)', '(4, 2)']
 
 La proposition est non connexe (2 sous-graphes)
 
-  Sous-graphe 1 : Offres ['P1', 'P4', 'P7', 'P5'] | Demandes ['C2', 'C3']
-  Sous-graphe 2 : Offres ['P2', 'P3', 'P6'] | Demandes ['C1']
+  Sous-graphe 1 : Offres ['P1', 'P7', 'P5'] | Demandes ['C2', 'C3']
+  Sous-graphe 2 : Offres ['P2', 'P3', 'P4', 'P6'] | Demandes ['C1']
 
 => Arrête de base ajouté en case (2, 3) [coût = 2] pour relier les sous-graphes 1 et 2
 Maintenant une arrête à été ajouté entre deux sous graphes.
@@ -400,7 +316,7 @@ Potentiels calculés (avec E(P1) = 0) :
   E(P1) = 0
   E(P2) = -13
   E(P3) = -14
-  E(P4) = -18
+  E(P4) = -17
   E(P5) = -12
   E(P6) = -18
   E(P7) = -16
@@ -414,7 +330,7 @@ Potentiels calculés (avec E(P1) = 0) :
       P1  |   23    |   20    |   15    |  100
       P2  |   10    |    7    |    2    |  100
       P3  |    9    |    6    |    1    |  100
-      P4  |    5    |    2    |   -3    |  100
+      P4  |    6    |    3    |   -2    |  100
       P5  |   11    |    8    |    3    |  100
       P6  |    5    |    2    |   -3    |  100
       P7  |    7    |    4    |   -1    |  100
@@ -427,10 +343,67 @@ Potentiels calculés (avec E(P1) = 0) :
       P1  |    7    |    0    |    0    |  100
       P2  |    0    |   43    |    0    |  100
       P3  |    0    |    4    |   29    |  100
-      P4  |    1    |    0    |   32    |  100
+      P4  |    0    |   -1    |   31    |  100
       P5  |   39    |   32    |    0    |  100
       P6  |    0    |   36    |   30    |  100
       P7  |   43    |    0    |   23    |  100
+          +---------+---------+---------+
+              400       200       100   
+
+Meilleure arête améliorante : (P4, C2) [coût marginal = -1]
+Arête ajoutée : (S4, D2)
+Cycle détecté : P2 -> C3 -> P1 -> C2 -> P4 -> C1
+
+Conditions pour chaque case du cycle :
+  Case (2, 3) [-] : valeur actuelle = 0
+  Case (1, 3) [+] : valeur actuelle = 0
+  Case (1, 2) [-] : valeur actuelle = 100
+  Case (4, 2) [+] : valeur actuelle = 0
+  Case (4, 1) [-] : valeur actuelle = 100
+  Case (2, 1) [+] : valeur actuelle = 100
+
+Theta (valeur maximale transférable) = 0
+
+Arête(s) supprimée(s) : ['(2, 3)']
+
+=> a proposition est connexe
+La proposition de transport est connexe et acyclique. Son graphe biparti associé est donc un arbre.
+
+Potentiels calculés (avec E(P1) = 0) :
+  E(P1) = 0
+  E(P2) = -14
+  E(P3) = -15
+  E(P4) = -18
+  E(P5) = -12
+  E(P6) = -19
+  E(P7) = -16
+  E(C1) = -24
+  E(C2) = -20
+  E(C3) = -15
+
+                Coûts potentiels        
+              C1        C2        C3     
+          +---------+---------+---------+
+      P1  |   24    |   20    |   15    |  100
+      P2  |   10    |    6    |    1    |  100
+      P3  |    9    |    5    |    0    |  100
+      P4  |    6    |    2    |   -3    |  100
+      P5  |   12    |    8    |    3    |  100
+      P6  |    5    |    1    |   -4    |  100
+      P7  |    8    |    4    |   -1    |  100
+          +---------+---------+---------+
+              400       200       100   
+
+                 Coûts marginaux        
+              C1        C2        C3     
+          +---------+---------+---------+
+      P1  |    6    |    0    |    0    |  100
+      P2  |    0    |   44    |    1    |  100
+      P3  |    0    |    5    |   30    |  100
+      P4  |    0    |    0    |   32    |  100
+      P5  |   38    |   32    |    0    |  100
+      P6  |    0    |   37    |   31    |  100
+      P7  |   42    |    0    |   23    |  100
           +---------+---------+---------+
               400       200       100   
 
@@ -444,11 +417,11 @@ A l'aide de la méthode du marche-pied avec potentiels, nous avons donc :
       S1  |    0    |   100   |    0    |  100
       S2  |   100   |    0    |    0    |  100
       S3  |   100   |    0    |    0    |  100
-      S4  |    0    |   100   |    0    |  100
-      S5  |    0    |    0    |    0    |  100
-      S6  |   200   |    0    |    0    |  100
-      S7  |    0    |    0    |    0    |  100
+      S4  |   100   |    0    |    0    |  100
+      S5  |    0    |    0    |   100   |  100
+      S6  |   100   |    0    |    0    |  100
+      S7  |    0    |   100   |    0    |  100
           +---------+---------+---------+
               400       200       100   
 
-Le cout total de cette proposition de transport est :  5100.0
+Le cout total de cette proposition de transport est :  5700.0

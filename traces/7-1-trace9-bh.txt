@@ -149,6 +149,7 @@ Conditions pour chaque case du cycle :
   Case (1, 2) [-] : valeur actuelle = 100
   Case (4, 2) [+] : valeur actuelle = 0
   Case (4, 1) [-] : valeur actuelle = 100
+  Case (2, 1) [+] : valeur actuelle = 100
 
 Theta (valeur maximale transférable) = 0
 

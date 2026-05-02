@@ -153,6 +153,7 @@ Conditions pour chaque case du cycle :
   Case (6, 1) [+] : valeur actuelle = 0
   Case (5, 1) [-] : valeur actuelle = 20
   Case (5, 2) [+] : valeur actuelle = 30
+  Case (6, 2) [-] : valeur actuelle = 60
 
 Theta (valeur maximale transférable) = 20
 
@@ -257,7 +258,7 @@ A l'aide de la méthode du marche-pied avec potentiels, nous avons donc :
       S3  |   30    |    0    |    0    |    0    |    0    |    0    |    0    |    0    |    0    |    0    |  30
       S4  |   40    |    0    |    0    |    0    |    0    |    0    |    0    |    0    |    0    |    0    |  40
       S5  |    0    |   50    |    0    |    0    |    0    |    0    |    0    |    0    |    0    |    0    |  50
-      S6  |   20    |   60    |    0    |    0    |    0    |    0    |    0    |    0    |    0    |    0    |  60
+      S6  |   20    |   40    |    0    |    0    |    0    |    0    |    0    |    0    |    0    |    0    |  60
       S7  |    0    |   50    |   20    |    0    |    0    |    0    |    0    |    0    |    0    |    0    |  70
       S8  |    0    |    0    |   80    |    0    |    0    |    0    |    0    |    0    |    0    |    0    |  80
       S9  |    0    |    0    |   60    |   30    |    0    |    0    |    0    |    0    |    0    |    0    |  90
@@ -275,4 +276,4 @@ A l'aide de la méthode du marche-pied avec potentiels, nous avons donc :
           +---------+---------+---------+---------+---------+---------+---------+---------+---------+---------+
               120       140       160       180       200       220       240       260       280       300   
 
-Le cout total de cette proposition de transport est :  280190.0
+Le cout total de cette proposition de transport est :  279150.0

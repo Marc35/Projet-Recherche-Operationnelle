@@ -66,33 +66,45 @@ Conditions pour chaque case du cycle :
   Case (1, 2) [+] : valeur actuelle = 0
   Case (1, 1) [-] : valeur actuelle = 100
   Case (2, 1) [+] : valeur actuelle = 0
+  Case (2, 2) [-] : valeur actuelle = 100
 
 Theta (valeur maximale transférable) = 100
 
-Arête(s) supprimée(s) : ['(1, 1)']
+Arête(s) supprimée(s) : ['(1, 1)', '(2, 2)']
+
+La proposition est non connexe (2 sous-graphes)
+
+  Sous-graphe 1 : Offres ['P1'] | Demandes ['C2']
+  Sous-graphe 2 : Offres ['P2'] | Demandes ['C1']
+
+=> Arrête de base ajouté en case (1, 1) [coût = 30] pour relier les sous-graphes 1 et 2
+Maintenant une arrête à été ajouté entre deux sous graphes.
+Vérifions que cette étape n'a pas créée de cycle :
+
+=> La proposition de transport est acyclique (l'ajout d'une arrête n'a pas créé de cycle).
+Vérifons qu'elle est connexe
 
 => a proposition est connexe
-La proposition de transport est connexe et acyclique. Son graphe biparti associé est donc un arbre.
 
 Potentiels calculés (avec E(P1) = 0) :
   E(P1) = 0
-  E(P2) = 30
-  E(C1) = 20
+  E(P2) = -20
+  E(C1) = -30
   E(C2) = -20
 
            Coûts potentiels   
               C1        C2     
           +---------+---------+
-      P1  |   -20   |   20    |  100
-      P2  |   10    |   50    |  100
+      P1  |   30    |   20    |  100
+      P2  |   10    |    0    |  100
           +---------+---------+
               100       100   
 
             Coûts marginaux   
               C1        C2     
           +---------+---------+
-      P1  |   50    |    0    |  100
-      P2  |    0    |    0    |  100
+      P1  |    0    |    0    |  100
+      P2  |    0    |   50    |  100
           +---------+---------+
               100       100   
 
@@ -104,8 +116,8 @@ A l'aide de la méthode du marche-pied avec potentiels, nous avons donc :
               D1        D2     
           +---------+---------+
       S1  |    0    |   100   |  100
-      S2  |   100   |   100   |  100
+      S2  |   100   |    0    |  100
           +---------+---------+
               100       100   
 
-Le cout total de cette proposition de transport est :  8000.0
+Le cout total de cette proposition de transport est :  3000.0
