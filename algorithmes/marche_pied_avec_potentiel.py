@@ -84,9 +84,6 @@ def maximize_cycle(transport_matrix, basis_matrix, cycle, entering_edge=None, co
     matrix = [row[:] for row in transport_matrix]
     basis = [row[:] for row in basis_matrix]
 
-    # Reconstruction des arêtes du cycle avec leur signe
-    cycle_edges = list(range(len(cycle) - 1)) 
-
     edges = []
     for k in range(len(cycle)):  # ← len(cycle) au lieu de len(cycle) - 1
         u = cycle[k]
